@@ -1,15 +1,13 @@
 import os
 from dotenv import load_dotenv
-from pathlib import Path
 import smtplib
 
-print(os.environ['LOGIN'])
-dotenv_path = Path('path/to/.env')
-load_dotenv(dotenv_path=dotenv_path)
-frand_name = ('Денис')
-sender = ('Владимир')
-web_sait_name = ('https://dvmn.org/profession-ref-program/vova.romanovich.2001/kT3tm/')
-text = ('''
+load_dotenv()
+mail_name = 'v.romanov.01@yandex.by'
+frand_name = 'Денис'
+sender = 'Владимир'
+web_sait_name = 'https://dvmn.org/profession-ref-program/vova.romanovich.2001/kT3tm/'
+text = '''
 Привет, %friend_name%! %my_name% приглашает тебя на сайт %website%!
 
 %website% — это новая версия онлайн-курса по программированию. 
@@ -26,19 +24,18 @@ text = ('''
 
 Регистрируйся → %website%  
 На курсы, которые еще не вышли, можно подписаться и получить уведомление о релизе сразу на имейл.
-''')
+'''
 text = text.replace('%website%',web_sait_name)
 text = text.replace('%friend_name%', frand_name)
 text = text.replace('%my_name%', sender)
-letter  = '''
-From: v.romanov.01@yandex.by
-To: v.romanov.01@yandex.by
+letter  = """\
+From: {1}
+To: {1}
 Subject: Приглашение!
 Content-Type: text/plain; charset="UTF-8";
-{0}'''.format(text)
+{0}""".format(text, mail_name)
 letter = letter.encode("UTF-8")
-print(letter)
 server = smtplib.SMTP_SSL('smtp.yandex.by', 465)
-server.login('LOGIN', 'PASSWORD')
-server.sendmail('v.romanov.01@yandex.by', 'v.romanov.01@yandex.by', letter)
+server.login(os.getenv('LOGIN'), os.getenv('PASSWORD'))
+server.sendmail(mail_name, mail_name, letter)
 server.quit()
